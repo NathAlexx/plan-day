@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#020617">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>TimeCraft - O que fazer agora & Relógio 24h</title>
+  <title>TimeCraft - O Que Fazer Agora</title>
   
   <!-- PWA Manifest -->
   <link rel="manifest" href="./manifest.json">
@@ -37,16 +37,17 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       -webkit-tap-highlight-color: transparent;
+      font-size: 16px;
     }
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
     .custom-scrollbar::-webkit-scrollbar {
-      width: 5px;
+      width: 6px;
     }
     .custom-scrollbar::-webkit-scrollbar-track {
       background: transparent;
@@ -83,46 +84,46 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen transition-colors duration-300 antialiased selection:bg-indigo-500 selection:text-white pb-24 md:pb-10">
+<body class="bg-slate-950 text-slate-100 min-h-screen transition-colors duration-300 antialiased selection:bg-indigo-500 selection:text-white pb-28 md:pb-12">
 
   <!-- Header -->
   <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40 no-print">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
       
       <!-- Brand & Clock -->
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 flex-shrink-0">
-          <i data-lucide="clock-9" class="w-5 h-5 text-white"></i>
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 flex-shrink-0">
+          <i data-lucide="clock-9" class="w-6 h-6 text-white"></i>
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <h1 class="font-bold text-base sm:text-lg leading-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">
+          <div class="flex items-center gap-2.5">
+            <h1 class="font-extrabold text-lg sm:text-2xl leading-tight bg-gradient-to-r from-white via-slate-100 to-indigo-300 bg-clip-text text-transparent">
               TimeCraft
             </h1>
-            <span id="headerLiveClock" class="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+            <span id="headerLiveClock" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
               00:00:00
             </span>
           </div>
-          <p class="text-[11px] text-slate-400 hidden sm:block">Organizador Diário 24h & Notificações</p>
+          <p class="text-xs text-slate-400 hidden sm:block">Rotina 24h & Notificações</p>
         </div>
       </div>
 
       <!-- Header Action Controls -->
-      <div class="flex items-center gap-1.5 sm:gap-2">
+      <div class="flex items-center gap-2 sm:gap-3">
         
         <!-- Notification Toggle Button -->
-        <button id="notificationToggleBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 transition-all">
-          <i data-lucide="bell" id="bellIcon" class="w-3.5 h-3.5"></i>
+        <button id="notificationToggleBtn" class="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 transition-all">
+          <i data-lucide="bell" id="bellIcon" class="w-4 h-4"></i>
           <span id="notificationBtnText" class="hidden sm:inline">Notificações</span>
         </button>
 
         <!-- Share / Copy Text -->
-        <button id="copySummaryBtn" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition-all" title="Copiar cronograma para WhatsApp">
+        <button id="copySummaryBtn" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition-all" title="Copiar cronograma para WhatsApp">
           <i data-lucide="share-2" class="w-4 h-4 text-emerald-400"></i>
         </button>
 
         <!-- Theme Toggle -->
-        <button id="themeToggleBtn" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-slate-700/50" title="Alternar tema">
+        <button id="themeToggleBtn" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-slate-700/50" title="Alternar tema">
           <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
           <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
         </button>
@@ -132,164 +133,146 @@
   </header>
 
   <!-- Desktop Navigation Tabs (Hidden on mobile) -->
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 hidden md:block no-print">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-6 hidden md:block no-print">
     <div class="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800/80 w-fit">
-      <button class="nav-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-md shadow-indigo-600/20" data-target="tab-now">
+      <button class="nav-tab-btn px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-md shadow-indigo-600/20" data-target="tab-now">
         <i data-lucide="target" class="w-4 h-4"></i>
         <span>O Que Fazer Agora</span>
       </button>
-      <button class="nav-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white" data-target="tab-clock">
+      <button class="nav-tab-btn px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white" data-target="tab-clock">
         <i data-lucide="compass" class="w-4 h-4"></i>
         <span>Relógio 24 Horas</span>
       </button>
-      <button class="nav-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white" data-target="tab-schedule">
+      <button class="nav-tab-btn px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white" data-target="tab-schedule">
         <i data-lucide="list-ordered" class="w-4 h-4"></i>
-        <span>Cronograma & Atividades (<span id="tabCountBadge">8</span>)</span>
+        <span>Cronograma Completo (<span id="tabCountBadge">8</span>)</span>
       </button>
     </div>
   </div>
 
   <!-- Main Container -->
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-4 md:py-6">
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-4 md:py-6">
     
-    <!-- Notification Permission Banner (if not granted) -->
-    <div id="notificationBanner" class="hidden mb-6 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 no-print">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 flex-shrink-0">
+    <!-- Notification Permission Banner -->
+    <div id="notificationBanner" class="hidden mb-6 p-4 sm:p-5 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 no-print">
+      <div class="flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 flex-shrink-0">
           <i data-lucide="bell-ring" class="w-5 h-5"></i>
         </div>
         <div>
-          <h4 class="text-sm font-bold text-white">Receba alertas ao mudar de atividade!</h4>
-          <p class="text-xs text-slate-400">Ative as notificações para seu celular ou computador avisar sempre que iniciar um novo bloco.</p>
+          <h4 class="text-sm sm:text-base font-bold text-white">Receba alertas ao mudar de atividade!</h4>
+          <p class="text-xs sm:text-sm text-slate-400">Ative as notificações para seu celular ou computador avisar sempre que iniciar um novo bloco.</p>
         </div>
       </div>
-      <button id="enableNotificationsBtn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-indigo-600/25 transition-all flex-shrink-0">
+      <button id="enableNotificationsBtn" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold rounded-xl shadow-lg shadow-indigo-600/25 transition-all flex-shrink-0 self-end sm:self-auto">
         Ativar Notificações
       </button>
     </div>
 
     <!-- ============================================================== -->
-    <!-- TAB 1: O QUE FAZER AGORA (TELA PRINCIPAL NO CELULAR/DESKTOP) -->
+    <!-- TAB 1: O QUE FAZER AGORA (TELA PRINCIPAL MOBILE / TABLET) -->
     <!-- ============================================================== -->
-    <section id="tab-now" class="tab-content space-y-6">
+    <section id="tab-now" class="tab-content space-y-5 sm:space-y-6">
       
-      <!-- HERO NOW CARD -->
-      <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900/90 to-indigo-950/40 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
+      <!-- HERO NOW CARD (Exatamente o formato do Print do Usuário com fontes maiores) -->
+      <div class="relative overflow-hidden bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
         
         <!-- Background Ambient Glow -->
-        <div id="heroGlow" class="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none"></div>
+        <div id="heroGlow" class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none"></div>
 
         <div class="relative z-10 space-y-6">
           
-          <!-- Top Badge & Status -->
-          <div class="flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center gap-2">
-              <span id="heroStatusBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <!-- Top Badges & Live Hour -->
+          <div class="flex items-center justify-between flex-wrap gap-2.5">
+            <div class="flex items-center gap-2.5">
+              <span id="heroStatusBadge" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
                 EM ANDAMENTO AGORA
               </span>
-              <span id="heroCategoryBadge" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700/60">
-                Trabalho
+              <span id="heroCategoryBadge" class="px-3 py-1.5 rounded-full text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 border border-slate-700/60">
+                Descanso / Sono
               </span>
             </div>
 
             <div class="text-right">
-              <span class="text-xs text-slate-400 font-mono">Hora Atual: </span>
-              <span id="heroCurrentTimeText" class="text-sm font-bold font-mono text-white">--:--</span>
+              <span class="text-xs sm:text-sm text-slate-400 font-mono">Hora Atual: </span>
+              <span id="heroCurrentTimeText" class="text-sm sm:text-base font-bold font-mono text-white">--:--</span>
             </div>
           </div>
 
           <!-- Main Activity Name & Time Range -->
           <div class="space-y-2">
-            <h2 id="heroActivityName" class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-none">
-              Trabalho
+            <h2 id="heroActivityName" class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight">
+              Dormir
             </h2>
-            <div class="flex items-center gap-2 text-sm sm:text-base text-indigo-300 font-mono font-medium">
-              <i data-lucide="clock" class="w-4 h-4 text-indigo-400"></i>
-              <span id="heroTimeRange">12:00 às 18:00</span>
-              <span>•</span>
-              <span id="heroTotalDuration">6h de duração</span>
+            <div class="flex items-center gap-2 text-sm sm:text-lg text-slate-300 font-mono font-semibold">
+              <i data-lucide="clock" class="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400"></i>
+              <span id="heroTimeRange">23:30 às 06:30</span>
+              <span class="text-slate-500">•</span>
+              <span id="heroTotalDuration" class="text-slate-400">7h de duração</span>
             </div>
           </div>
 
           <!-- Progress Bar & Remaining Countdown -->
-          <div class="space-y-2 pt-2">
-            <div class="flex items-center justify-between text-xs sm:text-sm">
-              <span class="text-slate-400 flex items-center gap-1">
-                <i data-lucide="hourglass" class="w-3.5 h-3.5 text-amber-400"></i>
+          <div class="space-y-2.5 pt-2">
+            <div class="flex items-center justify-between text-xs sm:text-base">
+              <span class="text-amber-300/90 font-semibold flex items-center gap-1.5">
+                <i data-lucide="hourglass" class="w-4 h-4 text-amber-400"></i>
                 Tempo restante neste bloco:
               </span>
-              <span id="heroRemainingTime" class="font-bold font-mono text-amber-400 text-base">
-                1h 45m restantes
+              <span id="heroRemainingTime" class="font-extrabold font-mono text-amber-300 text-base sm:text-xl">
+                5h 34m restantes
               </span>
             </div>
 
             <!-- Visual Progress Bar -->
-            <div class="w-full bg-slate-950 rounded-full h-3.5 p-0.5 border border-slate-800 overflow-hidden">
-              <div id="heroProgressBar" class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm" style="width: 65%;"></div>
+            <div class="w-full bg-slate-950 rounded-full h-4 sm:h-5 p-0.5 border border-slate-800 overflow-hidden">
+              <div id="heroProgressBar" class="bg-gradient-to-r from-indigo-500 via-violet-500 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm" style="width: 21%;"></div>
             </div>
             
-            <div class="flex justify-between text-[11px] text-slate-500 font-mono">
-              <span id="heroStartHour">12:00</span>
-              <span id="heroProgressPercent">65% concluído</span>
-              <span id="heroEndHour">18:00</span>
+            <div class="flex justify-between text-xs sm:text-sm text-slate-400 font-mono font-medium">
+              <span id="heroStartHour">23:30</span>
+              <span id="heroProgressPercent" class="text-indigo-300">21% concluído</span>
+              <span id="heroEndHour">06:30</span>
             </div>
           </div>
 
         </div>
       </div>
 
-      <!-- NEXT UP & QUICK STATS GRID -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- BOTTOM ROW: PRÓXIMA ATIVIDADE & BALANÇO DO DIA -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
         
-        <!-- Next Activity Card -->
-        <div class="bg-slate-900/70 backdrop-blur border border-slate-800 rounded-3xl p-5 shadow-lg flex items-center justify-between">
-          <div class="space-y-1 min-w-0 mr-3">
-            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-              <i data-lucide="fast-forward" class="w-3.5 h-3.5 text-indigo-400"></i>
-              Próxima Atividade
+        <!-- Próxima Atividade Card -->
+        <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl flex items-center justify-between">
+          <div class="space-y-1.5 min-w-0 mr-3">
+            <span class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <i data-lucide="fast-forward" class="w-4 h-4 text-indigo-400"></i>
+              PRÓXIMA ATIVIDADE
             </span>
-            <h3 id="nextActivityName" class="text-lg font-bold text-white truncate">Descanso pós trabalho</h3>
-            <p id="nextActivityTime" class="text-xs text-indigo-300 font-mono">Inicia às 18:00 (duração 2h)</p>
+            <h3 id="nextActivityName" class="text-xl sm:text-2xl font-bold text-white truncate">Exercicio</h3>
+            <p id="nextActivityTime" class="text-xs sm:text-sm text-indigo-300 font-mono font-medium">Inicia às 07:00 (duração 1h)</p>
           </div>
-          <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 flex-shrink-0">
+          <button onclick="switchTab('tab-schedule')" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 flex items-center justify-center text-indigo-400 flex-shrink-0 transition-all" title="Ver no cronograma">
             <i data-lucide="arrow-right" class="w-6 h-6"></i>
-          </div>
-        </div>
-
-        <!-- Daily Summary Card -->
-        <div class="bg-slate-900/70 backdrop-blur border border-slate-800 rounded-3xl p-5 shadow-lg flex items-center justify-between">
-          <div class="space-y-1 min-w-0 mr-3">
-            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-              <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-emerald-400"></i>
-              Balanço do Dia
-            </span>
-            <h3 id="todayTotalAllocated" class="text-lg font-bold text-emerald-400">21h 50m planejadas</h3>
-            <p id="todayFreeTime" class="text-xs text-slate-400">2h 10m de tempo livre</p>
-          </div>
-          <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0">
-            <i data-lucide="sparkles" class="w-6 h-6"></i>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Quick Timeline of Today (Chronological upcoming cards) -->
-      <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
-        <div class="flex items-center justify-between">
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <i data-lucide="calendar" class="w-4 h-4 text-indigo-400"></i>
-            Sequência de Hoje
-          </h3>
-          <button onclick="switchTab('tab-schedule')" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-1">
-            <span>Ver tudo</span>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
 
-        <div id="upcomingTimelineList" class="space-y-2.5">
-          <!-- Dynamically populated -->
+        <!-- Balanço do Dia Card -->
+        <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl flex items-center justify-between">
+          <div class="space-y-1.5 min-w-0 mr-3">
+            <span class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i>
+              BALANÇO DO DIA
+            </span>
+            <h3 id="todayTotalAllocated" class="text-xl sm:text-2xl font-bold text-emerald-400">21h 20m planejadas</h3>
+            <p id="todayFreeTime" class="text-xs sm:text-sm text-slate-300 font-medium">2h 40m de tempo livre</p>
+          </div>
+          <button onclick="switchTab('tab-clock')" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0 transition-all" title="Ver Relógio 24h">
+            <i data-lucide="sparkles" class="w-6 h-6"></i>
+          </button>
         </div>
+
       </div>
 
     </section>
@@ -302,15 +285,15 @@
         
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h2 class="text-base font-semibold text-white print-text-dark flex items-center gap-2">
+            <h2 class="text-lg sm:text-xl font-bold text-white print-text-dark flex items-center gap-2">
               <i data-lucide="compass" class="w-5 h-5 text-indigo-400 no-print"></i>
               Relógio 24 Horas
             </h2>
-            <p class="text-xs text-slate-400 mt-0.5">Posição real de cada atividade no círculo do dia</p>
+            <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Posição real de cada atividade no círculo do dia (00h no topo, 12h embaixo)</p>
           </div>
           
-          <div class="flex items-center gap-1 bg-slate-950 px-2.5 py-1 rounded-xl border border-slate-800 text-xs font-mono text-slate-300 no-print">
-            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <div class="flex items-center gap-1.5 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 text-xs sm:text-sm font-mono text-slate-300 no-print">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
             <span id="clockNowText">00:00:00</span>
           </div>
         </div>
@@ -322,7 +305,7 @@
             
             <!-- Center Display Hub -->
             <div id="clockCenterHub" class="absolute pointer-events-none flex flex-col items-center justify-center text-center p-4 rounded-full w-44 h-44 bg-slate-950/90 border border-slate-800 shadow-2xl backdrop-blur-md transition-all">
-              <span id="centerBadge" class="text-[10px] font-bold uppercase tracking-wider text-indigo-400 px-2 py-0.5 rounded-full bg-indigo-500/10 mb-1">
+              <span id="centerBadge" class="text-[10px] font-bold uppercase tracking-wider text-indigo-400 px-2.5 py-0.5 rounded-full bg-indigo-500/10 mb-1">
                 HORA ATUAL
               </span>
               <span id="centerMainTime" class="text-2xl font-extrabold text-white font-mono tracking-tight">--:--</span>
@@ -332,13 +315,13 @@
           </div>
         </div>
 
-        <div class="mt-4 pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
+        <div class="mt-4 pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-slate-400">
           <div class="flex items-center gap-3">
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> Atividades</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span> Livre</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span> Agora</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500"></span> Atividades</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-slate-800"></span> Livre</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span> Agora</span>
           </div>
-          <span class="text-[11px] text-slate-500">Toque ou passe o mouse nos blocos para inspecionar</span>
+          <span class="text-xs text-slate-500">Toque nos arcos para inspecionar</span>
         </div>
 
       </div>
@@ -352,23 +335,21 @@
       <!-- Top Action Bar -->
       <div class="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
             <i data-lucide="list-checks" class="w-5 h-5 text-indigo-400"></i>
             Todas as Atividades (<span id="scheduleListCount">0</span>)
           </h2>
-          <p class="text-xs text-slate-400">Adicione, edite ou exclua qualquer bloco de horário</p>
+          <p class="text-xs sm:text-sm text-slate-400">Cadastre, edite ou exclua blocos de horário</p>
         </div>
 
         <div class="flex items-center gap-2">
-          <!-- Print Button -->
-          <button id="printBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all">
-            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+          <button id="printBtn" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all">
+            <i data-lucide="printer" class="w-4 h-4"></i>
             <span>Imprimir / PDF</span>
           </button>
 
-          <!-- Export Backup JSON -->
-          <button id="exportBackupBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition-all">
-            <i data-lucide="download" class="w-3.5 h-3.5 text-indigo-400"></i>
+          <button id="exportBackupBtn" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition-all">
+            <i data-lucide="download" class="w-4 h-4 text-indigo-400"></i>
             <span>Backup</span>
           </button>
         </div>
@@ -376,49 +357,49 @@
 
       <!-- Add Activity Form -->
       <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-3xl p-6 shadow-xl no-print">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-4">
+        <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2 mb-4">
           <i data-lucide="plus-circle" class="w-4 h-4 text-indigo-400"></i>
           Cadastrar Nova Atividade
         </h3>
 
         <form id="createActivityForm" class="space-y-4">
           <div>
-            <label for="taskName" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label for="taskName" class="block text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
               Nome da Atividade
             </label>
             <input type="text" id="taskName" placeholder="Ex: Trabalho, Estudo, Academia, Sono..." required
-              class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
+              class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm sm:text-base text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <label for="startTime" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-                <i data-lucide="play" class="w-3 h-3 text-emerald-400"></i> Início
+              <label for="startTime" class="block text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                <i data-lucide="play" class="w-3.5 h-3.5 text-emerald-400"></i> Início
               </label>
               <input type="time" id="startTime" value="08:00" required
-                class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
+                class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
             </div>
 
             <div>
-              <label for="endTime" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-                <i data-lucide="square" class="w-3 h-3 text-rose-400"></i> Fim
+              <label for="endTime" class="block text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                <i data-lucide="square" class="w-3.5 h-3.5 text-rose-400"></i> Fim
               </label>
               <input type="time" id="endTime" value="12:00" required
-                class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
+                class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
             </div>
           </div>
 
-          <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex items-center justify-between">
-            <span class="text-xs text-slate-400">Duração calculada:</span>
-            <span id="calculatedDurationPreview" class="text-sm font-bold text-indigo-400 font-mono">4h 00m</span>
+          <div class="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800/80 flex items-center justify-between">
+            <span class="text-xs sm:text-sm text-slate-400">Duração calculada:</span>
+            <span id="calculatedDurationPreview" class="text-sm sm:text-base font-bold text-indigo-400 font-mono">4h 00m</span>
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <label for="taskCategory" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label for="taskCategory" class="block text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
                 Categoria
               </label>
-              <select id="taskCategory" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
+              <select id="taskCategory" class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
                 <option value="Trabalho">💼 Trabalho</option>
                 <option value="Estudo">📚 Estudo</option>
                 <option value="Saúde & Treino">🏋️ Saúde / Treino</option>
@@ -431,18 +412,18 @@
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label class="block text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
                 Cor
               </label>
               <div class="flex items-center gap-2">
                 <input type="color" id="taskColor" value="#6366f1"
-                  class="h-10 w-12 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer p-1">
-                <span id="colorHexText" class="text-xs text-slate-400 font-mono">#6366F1</span>
+                  class="h-12 w-14 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer p-1">
+                <span id="colorHexText" class="text-xs sm:text-sm text-slate-400 font-mono">#6366F1</span>
               </div>
             </div>
           </div>
 
-          <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl font-semibold text-sm shadow-lg shadow-indigo-600/25 transition-all flex items-center justify-center gap-2">
+          <button type="submit" class="w-full py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl font-bold text-sm sm:text-base shadow-lg shadow-indigo-600/25 transition-all flex items-center justify-center gap-2">
             <i data-lucide="plus" class="w-4 h-4"></i>
             <span>Adicionar Atividade</span>
           </button>
@@ -452,8 +433,8 @@
       <!-- Activity Cards List -->
       <div class="bg-slate-900/80 backdrop-blur border border-slate-800 print-card rounded-3xl p-6 shadow-xl space-y-4">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-          <h3 class="text-sm font-bold text-white print-text-dark">Lista Completa em Sequência</h3>
-          <button id="sortByScheduleBtn" class="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-semibold">
+          <h3 class="text-sm sm:text-base font-bold text-white print-text-dark">Lista Completa do Dia</h3>
+          <button id="sortByScheduleBtn" class="text-xs sm:text-sm text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-semibold">
             <i data-lucide="arrow-down-up" class="w-3.5 h-3.5"></i>
             <span>Reordenar</span>
           </button>
@@ -469,27 +450,27 @@
   </main>
 
   <!-- ============================================================== -->
-  <!-- MOBILE BOTTOM NAVIGATION BAR (Sticky no Celular) -->
+  <!-- MOBILE BOTTOM NAVIGATION BAR (Sticky no Celular/Tablet) -->
   <!-- ============================================================== -->
-  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/90 backdrop-blur-lg border-t border-slate-800/80 md:hidden no-print">
-    <div class="grid grid-cols-3 h-16 max-w-md mx-auto px-2">
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800/80 md:hidden no-print">
+    <div class="grid grid-cols-3 h-18 max-w-md mx-auto px-2 py-1.5">
       
       <!-- Tab 1: Agora -->
-      <button class="mobile-nav-btn flex flex-col items-center justify-center gap-1 text-indigo-400" data-target="tab-now">
-        <i data-lucide="target" class="w-5 h-5"></i>
-        <span class="text-[10px] font-bold">Agora</span>
+      <button class="mobile-nav-btn flex flex-col items-center justify-center gap-1 text-indigo-400 py-1" data-target="tab-now">
+        <i data-lucide="target" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+        <span class="text-xs font-bold">Agora</span>
       </button>
 
       <!-- Tab 2: Relógio 24h -->
-      <button class="mobile-nav-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white" data-target="tab-clock">
-        <i data-lucide="compass" class="w-5 h-5"></i>
-        <span class="text-[10px] font-medium">Relógio 24h</span>
+      <button class="mobile-nav-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white py-1" data-target="tab-clock">
+        <i data-lucide="compass" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+        <span class="text-xs font-medium">Relógio 24h</span>
       </button>
 
       <!-- Tab 3: Lista / Cronograma -->
-      <button class="mobile-nav-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white" data-target="tab-schedule">
-        <i data-lucide="list-ordered" class="w-5 h-5"></i>
-        <span class="text-[10px] font-medium">Cronograma</span>
+      <button class="mobile-nav-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white py-1" data-target="tab-schedule">
+        <i data-lucide="list-ordered" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+        <span class="text-xs font-medium">Cronograma</span>
       </button>
 
     </div>
@@ -503,12 +484,12 @@
       
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+          <div class="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
             <i data-lucide="edit-3" class="w-4 h-4"></i>
           </div>
-          <h3 class="font-bold text-white text-base">Editar Atividade</h3>
+          <h3 class="font-bold text-white text-base sm:text-lg">Editar Atividade</h3>
         </div>
-        <button id="closeEditModalBtn" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all">
+        <button id="closeEditModalBtn" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -517,42 +498,42 @@
         <input type="hidden" id="editTaskId">
 
         <div>
-          <label for="editTaskName" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+          <label for="editTaskName" class="block text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
             Nome da Atividade
           </label>
           <input type="text" id="editTaskName" required
-            class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
+            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label for="editStartTime" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-              <i data-lucide="play" class="w-3 h-3 text-emerald-400"></i> Início
+            <label for="editStartTime" class="block text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+              <i data-lucide="play" class="w-3.5 h-3.5 text-emerald-400"></i> Início
             </label>
             <input type="time" id="editStartTime" required
-              class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
+              class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
           </div>
 
           <div>
-            <label for="editEndTime" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-              <i data-lucide="square" class="w-3 h-3 text-rose-400"></i> Fim
+            <label for="editEndTime" class="block text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+              <i data-lucide="square" class="w-3.5 h-3.5 text-rose-400"></i> Fim
             </label>
             <input type="time" id="editEndTime" required
-              class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
+              class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
           </div>
         </div>
 
-        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex items-center justify-between">
-          <span class="text-xs text-slate-400">Nova duração:</span>
-          <span id="editDurationPreview" class="text-sm font-bold text-indigo-400 font-mono">--</span>
+        <div class="p-3.5 bg-slate-950/60 rounded-xl border border-slate-800/80 flex items-center justify-between">
+          <span class="text-xs sm:text-sm text-slate-400">Nova duração:</span>
+          <span id="editDurationPreview" class="text-sm sm:text-base font-bold text-indigo-400 font-mono">--</span>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label for="editTaskCategory" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label for="editTaskCategory" class="block text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
               Categoria
             </label>
-            <select id="editTaskCategory" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
+            <select id="editTaskCategory" class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm sm:text-base text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
               <option value="Trabalho">💼 Trabalho</option>
               <option value="Estudo">📚 Estudo</option>
               <option value="Saúde & Treino">🏋️ Saúde / Treino</option>
@@ -565,22 +546,22 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label class="block text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
               Cor
             </label>
             <div class="flex items-center gap-2">
               <input type="color" id="editTaskColor" value="#6366f1"
-                class="h-10 w-12 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer p-1">
-              <span id="editColorHexText" class="text-xs text-slate-400 font-mono">#6366F1</span>
+                class="h-12 w-14 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer p-1">
+              <span id="editColorHexText" class="text-xs sm:text-sm text-slate-400 font-mono">#6366F1</span>
             </div>
           </div>
         </div>
 
         <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
-          <button type="button" id="cancelEditBtn" class="px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
+          <button type="button" id="cancelEditBtn" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
             Cancelar
           </button>
-          <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/25 transition-all flex items-center gap-1.5">
+          <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-indigo-600/25 transition-all flex items-center gap-1.5">
             <i data-lucide="check" class="w-4 h-4"></i>
             Salvar Alterações
           </button>
@@ -591,7 +572,7 @@
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-20 md:bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+  <div id="toast" class="fixed bottom-24 md:bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
     <div class="bg-slate-900 border border-emerald-500/40 text-emerald-300 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 text-sm font-medium">
       <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
       <span id="toastMsg">Copiado com sucesso!</span>
@@ -600,7 +581,6 @@
 
   <!-- Application Logic -->
   <script>
-    // Register PWA Service Worker for mobile install and push
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then((reg) => {
@@ -611,15 +591,14 @@
       });
     }
 
-    // Sound chime generator using Web Audio API (no external mp3 files needed)
     function playNotificationChime() {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
         gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
         osc.connect(gain);
@@ -627,7 +606,7 @@
         osc.start();
         osc.stop(audioCtx.currentTime + 0.6);
       } catch (e) {
-        console.log('Áudio não permitido ainda.');
+        console.log('Áudio aguardando interação.');
       }
     }
 
@@ -688,7 +667,6 @@
     const nextActivityTime = document.getElementById('nextActivityTime');
     const todayTotalAllocated = document.getElementById('todayTotalAllocated');
     const todayFreeTime = document.getElementById('todayFreeTime');
-    const upcomingTimelineList = document.getElementById('upcomingTimelineList');
     const tabCountBadge = document.getElementById('tabCountBadge');
     const scheduleListCount = document.getElementById('scheduleListCount');
     const taskListContainer = document.getElementById('taskListContainer');
@@ -813,9 +791,7 @@
       }
     }
 
-    // ==========================================
-    // NOTIFICATIONS ENGINE
-    // ==========================================
+    // Notifications Engine
     function checkNotificationStatus() {
       if (!("Notification" in window)) {
         notificationBanner.classList.add('hidden');
@@ -826,12 +802,12 @@
       if (Notification.permission === "granted") {
         notificationBanner.classList.add('hidden');
         notificationBtnText.textContent = "Notificações Ativas";
-        bellIcon.className = "w-3.5 h-3.5 text-emerald-400";
-        notificationToggleBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 transition-all";
+        bellIcon.className = "w-4 h-4 text-emerald-400";
+        notificationToggleBtn.className = "flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 transition-all";
       } else if (Notification.permission === "denied") {
         notificationBanner.classList.add('hidden');
         notificationBtnText.textContent = "Bloqueadas";
-        bellIcon.className = "w-3.5 h-3.5 text-red-400";
+        bellIcon.className = "w-4 h-4 text-red-400";
       } else {
         notificationBanner.classList.remove('hidden');
         notificationBtnText.textContent = "Ativar Alertas";
@@ -846,7 +822,7 @@
       Notification.requestPermission().then((permission) => {
         checkNotificationStatus();
         if (permission === "granted") {
-          showToast("Notificações ativadas com sucesso!");
+          showToast("Notificações ativadas!");
           sendActivityNotification("TimeCraft", "Notificações ativadas! Avisaremos na mudança de cada atividade.");
           playNotificationChime();
         }
@@ -858,13 +834,11 @@
 
     function sendActivityNotification(title, body) {
       if ("Notification" in window && Notification.permission === "granted") {
-        // Trigger Vibration on Mobile if supported
         if ("vibrate" in navigator) {
           navigator.vibrate([200, 100, 200]);
         }
         playNotificationChime();
 
-        // Native System Notification
         new Notification(title, {
           body: body,
           icon: "https://cdn-icons-png.flaticon.com/512/3241/3241470.png",
@@ -883,20 +857,20 @@
       // Update Desktop Tabs
       document.querySelectorAll('.nav-tab-btn').forEach(btn => {
         if (btn.getAttribute('data-target') === targetId) {
-          btn.className = "nav-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-md shadow-indigo-600/20";
+          btn.className = "nav-tab-btn px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-md shadow-indigo-600/20";
         } else {
-          btn.className = "nav-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white";
+          btn.className = "nav-tab-btn px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white";
         }
       });
 
       // Update Mobile Tabs
       document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
         if (btn.getAttribute('data-target') === targetId) {
-          btn.className = "mobile-nav-btn flex flex-col items-center justify-center gap-1 text-indigo-400";
-          btn.querySelector('span').className = "text-[10px] font-bold";
+          btn.className = "mobile-nav-btn flex flex-col items-center justify-center gap-1 text-indigo-400 py-1";
+          btn.querySelector('span').className = "text-xs font-bold";
         } else {
-          btn.className = "mobile-nav-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white";
-          btn.querySelector('span').className = "text-[10px] font-medium";
+          btn.className = "mobile-nav-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white py-1";
+          btn.querySelector('span').className = "text-xs font-medium";
         }
       });
 
@@ -939,11 +913,10 @@
       
       let nextSlot = sorted.find(act => timeStringToMinutes(act.startTime) > currentMinutes);
       if (!nextSlot && sorted.length > 0) {
-        nextSlot = sorted[0]; // wraps to next day morning
+        nextSlot = sorted[0];
       }
 
       if (currentSlot) {
-        // Check if activity changed -> Send Push Notification!
         if (lastNotifiedActivityId !== currentSlot.id) {
           if (lastNotifiedActivityId !== null) {
             sendActivityNotification(
@@ -955,8 +928,8 @@
         }
 
         // Active State UI
-        heroStatusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-        heroStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> EM ANDAMENTO AGORA`;
+        heroStatusBadge.className = "inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+        heroStatusBadge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span> EM ANDAMENTO AGORA`;
         
         heroCategoryBadge.textContent = currentSlot.category;
         heroCategoryBadge.style.color = currentSlot.color;
@@ -976,7 +949,6 @@
         if (eMin > sMin) {
           elapsed = currentMinutes - sMin;
         } else {
-          // Crosses midnight
           if (currentMinutes >= sMin) elapsed = currentMinutes - sMin;
           else elapsed = (1440 - sMin) + currentMinutes;
         }
@@ -994,13 +966,12 @@
         heroGlow.style.backgroundColor = `${currentSlot.color}25`;
 
       } else {
-        // Free Time Slot
         if (lastNotifiedActivityId !== 'free') {
           lastNotifiedActivityId = 'free';
         }
 
-        heroStatusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30";
-        heroStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-indigo-400"></span> TEMPO LIVRE`;
+        heroStatusBadge.className = "inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30";
+        heroStatusBadge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span> TEMPO LIVRE`;
 
         heroCategoryBadge.textContent = "Não Planejado";
         heroCategoryBadge.style.color = "#94a3b8";
@@ -1040,39 +1011,6 @@
       const freeMins = Math.max(0, 1440 - totalMinutes);
       todayTotalAllocated.textContent = `${formatTime(totalMinutes)} planejadas`;
       todayFreeTime.textContent = `${formatTime(freeMins)} de tempo livre`;
-    }
-
-    // Render Timeline on Tab 1
-    function renderUpcomingTimeline() {
-      const now = new Date();
-      const currentMinutes = (now.getHours() * 60) + now.getMinutes();
-      const sorted = [...activities].sort((a, b) => timeStringToMinutes(a.startTime) - timeStringToMinutes(b.startTime));
-
-      upcomingTimelineList.innerHTML = sorted.map((act) => {
-        const sMin = timeStringToMinutes(act.startTime);
-        const eMin = timeStringToMinutes(act.endTime);
-        const isNow = isCurrentTimeInSlot(currentMinutes, sMin, eMin);
-        const isPast = eMin > sMin ? eMin <= currentMinutes : false;
-
-        return `
-          <div class="flex items-center justify-between p-3 rounded-2xl border ${isNow ? 'bg-indigo-600/10 border-indigo-500/40' : (isPast ? 'bg-slate-950/40 border-slate-800/40 opacity-60' : 'bg-slate-950/80 border-slate-800/80')} transition-all">
-            <div class="flex items-center gap-3 min-w-0">
-              <span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${act.color}"></span>
-              <div class="min-w-0">
-                <div class="flex items-center gap-2">
-                  <h4 class="text-sm font-bold text-white truncate">${act.name}</h4>
-                  <span class="px-2 py-0.5 rounded text-[9px] font-medium bg-slate-800 text-slate-300">${act.category}</span>
-                  ${isNow ? '<span class="px-2 py-0.2 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-400">AGORA</span>' : ''}
-                </div>
-                <p class="text-xs text-slate-400 font-mono mt-0.5">${act.startTime} às ${act.endTime} (${formatTime(act.minutes)})</p>
-              </div>
-            </div>
-            <button onclick="openEditModal('${act.id}')" class="p-2 text-slate-400 hover:text-white rounded-lg transition-colors" title="Editar">
-              <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
-            </button>
-          </div>
-        `;
-      }).join('');
     }
 
     // ==========================================
@@ -1179,7 +1117,7 @@
       ctx.strokeStyle = '#1e293b';
       ctx.stroke();
 
-      // Real-Time Hand
+      // Real-Time Clock Hand
       const now = new Date();
       const currentMinutes = (now.getHours() * 60) + now.getMinutes() + (now.getSeconds() / 60);
       const currentAngle = (currentMinutes / 1440) * (Math.PI * 2) - (Math.PI / 2);
@@ -1243,7 +1181,7 @@
         if (found) {
           hoveredActivity = found;
           centerBadge.textContent = found.category;
-          centerBadge.className = 'text-[9px] font-bold uppercase tracking-wider text-white px-2 py-0.5 rounded-full mb-1';
+          centerBadge.className = 'text-[10px] font-bold uppercase tracking-wider text-white px-2.5 py-0.5 rounded-full mb-1';
           centerBadge.style.backgroundColor = found.color;
           centerMainTime.textContent = `${found.startTime} - ${found.endTime}`;
           centerSubText.textContent = found.name;
@@ -1272,7 +1210,7 @@
       const nowMins = (now.getHours() * 60) + now.getMinutes();
 
       centerBadge.textContent = 'HORA ATUAL';
-      centerBadge.className = 'text-[9px] font-bold uppercase tracking-wider text-indigo-400 px-2 py-0.5 rounded-full bg-indigo-500/10 mb-1';
+      centerBadge.className = 'text-[10px] font-bold uppercase tracking-wider text-indigo-400 px-2.5 py-0.5 rounded-full bg-indigo-500/10 mb-1';
       centerBadge.style.backgroundColor = '';
       centerMainTime.textContent = `${hStr}:${mStr}`;
       
@@ -1301,18 +1239,18 @@
         const dayPercent = ((act.minutes / 1440) * 100).toFixed(1);
 
         return `
-          <div class="group bg-slate-950/80 hover:bg-slate-950 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-4 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="group bg-slate-950/80 hover:bg-slate-950 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-4 sm:p-5 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="flex items-center gap-3.5 min-w-0">
               <span class="w-4 h-4 rounded-full flex-shrink-0 shadow-md ring-2 ring-slate-800" style="background-color: ${act.color}"></span>
               <div class="min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
-                  <span class="font-mono text-xs text-slate-500 font-bold">#${idx + 1}</span>
-                  <h4 class="text-sm font-bold text-white truncate">${act.name}</h4>
-                  <span class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700/50">
+                  <span class="font-mono text-xs sm:text-sm text-slate-500 font-bold">#${idx + 1}</span>
+                  <h4 class="text-sm sm:text-base font-bold text-white truncate">${act.name}</h4>
+                  <span class="px-2.5 py-0.5 rounded-md text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700/50">
                     ${act.category}
                   </span>
                 </div>
-                <div class="flex flex-wrap items-center gap-2 text-xs text-slate-400 mt-1">
+                <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-slate-400 mt-1">
                   <span class="inline-flex items-center gap-1 font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
                     ${act.startTime} às ${act.endTime}
                   </span>
@@ -1323,13 +1261,13 @@
               </div>
             </div>
 
-            <div class="flex items-center gap-1.5 self-end sm:self-center no-print">
-              <button onclick="openEditModal('${act.id}')" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-indigo-600/20 text-slate-300 border border-slate-700/60 text-xs font-semibold flex items-center gap-1 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            <div class="flex items-center gap-2 self-end sm:self-center no-print">
+              <button onclick="openEditModal('${act.id}')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-indigo-600/20 text-slate-300 border border-slate-700/60 text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                 <span>Editar</span>
               </button>
-              <button onclick="deleteActivity('${act.id}')" class="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+              <button onclick="deleteActivity('${act.id}')" class="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
               </button>
             </div>
           </div>
@@ -1337,7 +1275,6 @@
       }).join('');
 
       updateHeroNow();
-      renderUpcomingTimeline();
       drawClock();
       lucide.createIcons();
     }
@@ -1484,7 +1421,6 @@
       document.documentElement.classList.toggle('dark');
     });
 
-    // Tick Interval
     function tick() {
       updateHeroNow();
       drawClock();
