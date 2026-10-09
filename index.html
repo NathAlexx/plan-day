@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#020617">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>TimeCraft - O que fazer agora & Relógio 24h</title>
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3241/3241470.png">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: rgba(156, 163, 175, 0.3);
+      border-radius: 20px;
+    }
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.8);
+      cursor: pointer;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+      }
+      header, nav, #notificationBanner, #editModal, .no-print {
+        display: none !important;
+      }
+      .tab-content {
+        display: block !important;
+      }
+      .print-card {
+        border: 1px solid #e2e8f0 !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+      }
+      .print-text-dark {
+        color: #0f172a !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen transition-colors duration-300 antialiased selection:bg-indigo-500 selection:text-white pb-24 md:pb-10">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40 no-print">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Clock -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 flex-shrink-0">
+          <i data-lucide="clock-9" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-base sm:text-lg leading-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">
+              TimeCraft
+            </h1>
+            <span id="headerLiveClock" class="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              00:00:00
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Organizador Diário 24h & Notificações</p>
+        </div>
+      </div>
+
+      <!-- Header Action Controls -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        
+        <!-- Notification Toggle Button -->
+        <button id="notificationToggleBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 transition-all">
+          <i data-lucide="bell" id="bellIcon" class="w-3.5 h-3.5"></i>
+          <span id="notificationBtnText" class="hidden sm:inline">Notificações</span>
+        </button>
+
+        <!-- Share / Copy Text -->
+        <button id="copySummaryBtn" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition-all" title="Copiar cronograma para WhatsApp">
+          <i data-lucide="share-2" class="w-4 h-4 text-emerald-400"></i>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button id="themeToggleBtn" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-slate-700/50" title="Alternar tema">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Desktop Navigation Tabs (Hidden on mobile) -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 hidden md:block no-print">
+    <div class="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800/80 w-fit">
+      <button class="nav-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-md shadow-indigo-600/20" data-target="tab-now">
+        <i data-lucide="target" class="w-4 h-4"></i>
+        <span>O Que Fazer Agora</span>
+      </button>
+      <button class="nav-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white" data-target="tab-clock">
+        <i data-lucide="compass" class="w-4 h-4"></i>
+        <span>Relógio 24 Horas</span>
+      </button>
+      <button class="nav-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white" data-target="tab-schedule">
+        <i data-lucide="list-ordered" class="w-4 h-4"></i>
+        <span>Cronograma & Atividades (<span id="tabCountBadge">8</span>)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-4 md:py-6">
+    
+    <!-- Notification Permission Banner (if not granted) -->
+    <div id="notificationBanner" class="hidden mb-6 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 no-print">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 flex-shrink-0">
+          <i data-lucide="bell-ring" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h4 class="text-sm font-bold text-white">Receba alertas ao mudar de atividade!</h4>
+          <p class="text-xs text-slate-400">Ative as notificações para seu celular ou computador avisar sempre que iniciar um novo bloco.</p>
+        </div>
+      </div>
+      <button id="enableNotificationsBtn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-indigo-600/25 transition-all flex-shrink-0">
+        Ativar Notificações
+      </button>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- TAB 1: O QUE FAZER AGORA (TELA PRINCIPAL NO CELULAR/DESKTOP) -->
+    <!-- ============================================================== -->
+    <section id="tab-now" class="tab-content space-y-6">
+      
+      <!-- HERO NOW CARD -->
+      <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900/90 to-indigo-950/40 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
+        
+        <!-- Background Ambient Glow -->
+        <div id="heroGlow" class="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 space-y-6">
+          
+          <!-- Top Badge & Status -->
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span id="heroStatusBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                EM ANDAMENTO AGORA
+              </span>
+              <span id="heroCategoryBadge" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700/60">
+                Trabalho
+              </span>
+            </div>
+
+            <div class="text-right">
+              <span class="text-xs text-slate-400 font-mono">Hora Atual: </span>
+              <span id="heroCurrentTimeText" class="text-sm font-bold font-mono text-white">--:--</span>
+            </div>
+          </div>
+
+          <!-- Main Activity Name & Time Range -->
+          <div class="space-y-2">
+            <h2 id="heroActivityName" class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-none">
+              Trabalho
+            </h2>
+            <div class="flex items-center gap-2 text-sm sm:text-base text-indigo-300 font-mono font-medium">
+              <i data-lucide="clock" class="w-4 h-4 text-indigo-400"></i>
+              <span id="heroTimeRange">12:00 às 18:00</span>
+              <span>•</span>
+              <span id="heroTotalDuration">6h de duração</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar & Remaining Countdown -->
+          <div class="space-y-2 pt-2">
+            <div class="flex items-center justify-between text-xs sm:text-sm">
+              <span class="text-slate-400 flex items-center gap-1">
+                <i data-lucide="hourglass" class="w-3.5 h-3.5 text-amber-400"></i>
+                Tempo restante neste bloco:
+              </span>
+              <span id="heroRemainingTime" class="font-bold font-mono text-amber-400 text-base">
+                1h 45m restantes
+              </span>
+            </div>
+
+            <!-- Visual Progress Bar -->
+            <div class="w-full bg-slate-950 rounded-full h-3.5 p-0.5 border border-slate-800 overflow-hidden">
+              <div id="heroProgressBar" class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm" style="width: 65%;"></div>
+            </div>
+            
+            <div class="flex justify-between text-[11px] text-slate-500 font-mono">
+              <span id="heroStartHour">12:00</span>
+              <span id="heroProgressPercent">65% concluído</span>
+              <span id="heroEndHour">18:00</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- NEXT UP & QUICK STATS GRID -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        
+        <!-- Next Activity Card -->
+        <div class="bg-slate-900/70 backdrop-blur border border-slate-800 rounded-3xl p-5 shadow-lg flex items-center justify-between">
+          <div class="space-y-1 min-w-0 mr-3">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+              <i data-lucide="fast-forward" class="w-3.5 h-3.5 text-indigo-400"></i>
+              Próxima Atividade
+            </span>
+            <h3 id="nextActivityName" class="text-lg font-bold text-white truncate">Descanso pós trabalho</h3>
+            <p id="nextActivityTime" class="text-xs text-indigo-300 font-mono">Inicia às 18:00 (duração 2h)</p>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 flex-shrink-0">
+            <i data-lucide="arrow-right" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <!-- Daily Summary Card -->
+        <div class="bg-slate-900/70 backdrop-blur border border-slate-800 rounded-3xl p-5 shadow-lg flex items-center justify-between">
+          <div class="space-y-1 min-w-0 mr-3">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+              <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-emerald-400"></i>
+              Balanço do Dia
+            </span>
+            <h3 id="todayTotalAllocated" class="text-lg font-bold text-emerald-400">21h 50m planejadas</h3>
+            <p id="todayFreeTime" class="text-xs text-slate-400">2h 10m de tempo livre</p>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0">
+            <i data-lucide="sparkles" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Timeline of Today (Chronological upcoming cards) -->
+      <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-indigo-400"></i>
+            Sequência de Hoje
+          </h3>
+          <button onclick="switchTab('tab-schedule')" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-1">
+            <span>Ver tudo</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <div id="upcomingTimelineList" class="space-y-2.5">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 2: RELÓGIO 24 HORAS (GRÁFICO CIRCULAR) -->
+    <!-- ============================================================== -->
+    <section id="tab-clock" class="tab-content hidden space-y-6">
+      <div class="bg-slate-900/80 backdrop-blur border border-slate-800 print-card rounded-3xl p-6 shadow-xl relative overflow-hidden">
+        
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-base font-semibold text-white print-text-dark flex items-center gap-2">
+              <i data-lucide="compass" class="w-5 h-5 text-indigo-400 no-print"></i>
+              Relógio 24 Horas
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Posição real de cada atividade no círculo do dia</p>
+          </div>
+          
+          <div class="flex items-center gap-1 bg-slate-950 px-2.5 py-1 rounded-xl border border-slate-800 text-xs font-mono text-slate-300 no-print">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span id="clockNowText">00:00:00</span>
+          </div>
+        </div>
+
+        <!-- Clock Canvas -->
+        <div class="relative flex items-center justify-center p-2">
+          <div class="w-full max-w-[420px] aspect-square relative flex items-center justify-center">
+            <canvas id="clockCanvas" width="840" height="840" class="w-full h-full cursor-crosshair"></canvas>
+            
+            <!-- Center Display Hub -->
+            <div id="clockCenterHub" class="absolute pointer-events-none flex flex-col items-center justify-center text-center p-4 rounded-full w-44 h-44 bg-slate-950/90 border border-slate-800 shadow-2xl backdrop-blur-md transition-all">
+              <span id="centerBadge" class="text-[10px] font-bold uppercase tracking-wider text-indigo-400 px-2 py-0.5 rounded-full bg-indigo-500/10 mb-1">
+                HORA ATUAL
+              </span>
+              <span id="centerMainTime" class="text-2xl font-extrabold text-white font-mono tracking-tight">--:--</span>
+              <span id="centerSubText" class="text-xs font-medium text-slate-400 truncate max-w-[140px] mt-0.5">Relógio 24h</span>
+              <span id="centerDetailText" class="text-[11px] font-mono text-emerald-400 mt-0.5">Sincronizado</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
+          <div class="flex items-center gap-3">
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> Atividades</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span> Livre</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span> Agora</span>
+          </div>
+          <span class="text-[11px] text-slate-500">Toque ou passe o mouse nos blocos para inspecionar</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 3: CRONOGRAMA & CRUD DE ATIVIDADES -->
+    <!-- ============================================================== -->
+    <section id="tab-schedule" class="tab-content hidden space-y-6">
+      
+      <!-- Top Action Bar -->
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="list-checks" class="w-5 h-5 text-indigo-400"></i>
+            Todas as Atividades (<span id="scheduleListCount">0</span>)
+          </h2>
+          <p class="text-xs text-slate-400">Adicione, edite ou exclua qualquer bloco de horário</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Print Button -->
+          <button id="printBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span>Imprimir / PDF</span>
+          </button>
+
+          <!-- Export Backup JSON -->
+          <button id="exportBackupBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60 transition-all">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-indigo-400"></i>
+            <span>Backup</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Add Activity Form -->
+      <div class="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-3xl p-6 shadow-xl no-print">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-4">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-indigo-400"></i>
+          Cadastrar Nova Atividade
+        </h3>
+
+        <form id="createActivityForm" class="space-y-4">
+          <div>
+            <label for="taskName" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              Nome da Atividade
+            </label>
+            <input type="text" id="taskName" placeholder="Ex: Trabalho, Estudo, Academia, Sono..." required
+              class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="startTime" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                <i data-lucide="play" class="w-3 h-3 text-emerald-400"></i> Início
+              </label>
+              <input type="time" id="startTime" value="08:00" required
+                class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
+            </div>
+
+            <div>
+              <label for="endTime" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                <i data-lucide="square" class="w-3 h-3 text-rose-400"></i> Fim
+              </label>
+              <input type="time" id="endTime" value="12:00" required
+                class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex items-center justify-between">
+            <span class="text-xs text-slate-400">Duração calculada:</span>
+            <span id="calculatedDurationPreview" class="text-sm font-bold text-indigo-400 font-mono">4h 00m</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="taskCategory" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                Categoria
+              </label>
+              <select id="taskCategory" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
+                <option value="Trabalho">💼 Trabalho</option>
+                <option value="Estudo">📚 Estudo</option>
+                <option value="Saúde & Treino">🏋️ Saúde / Treino</option>
+                <option value="Descanso / Sono">😴 Descanso / Sono</option>
+                <option value="Lazer & Hobby">🎮 Lazer / Hobby</option>
+                <option value="Refeição">🍽️ Refeição</option>
+                <option value="Rotina Diária">🧼 Rotina / Casa</option>
+                <option value="Outros">✨ Outros</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                Cor
+              </label>
+              <div class="flex items-center gap-2">
+                <input type="color" id="taskColor" value="#6366f1"
+                  class="h-10 w-12 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer p-1">
+                <span id="colorHexText" class="text-xs text-slate-400 font-mono">#6366F1</span>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl font-semibold text-sm shadow-lg shadow-indigo-600/25 transition-all flex items-center justify-center gap-2">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Adicionar Atividade</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Activity Cards List -->
+      <div class="bg-slate-900/80 backdrop-blur border border-slate-800 print-card rounded-3xl p-6 shadow-xl space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 class="text-sm font-bold text-white print-text-dark">Lista Completa em Sequência</h3>
+          <button id="sortByScheduleBtn" class="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-semibold">
+            <i data-lucide="arrow-down-up" class="w-3.5 h-3.5"></i>
+            <span>Reordenar</span>
+          </button>
+        </div>
+
+        <div id="taskListContainer" class="space-y-3">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- MOBILE BOTTOM NAVIGATION BAR (Sticky no Celular) -->
+  <!-- ============================================================== -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/90 backdrop-blur-lg border-t border-slate-800/80 md:hidden no-print">
+    <div class="grid grid-cols-3 h-16 max-w-md mx-auto px-2">
+      
+      <!-- Tab 1: Agora -->
+      <button class="mobile-nav-btn flex flex-col items-center justify-center gap-1 text-indigo-400" data-target="tab-now">
+        <i data-lucide="target" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold">Agora</span>
+      </button>
+
+      <!-- Tab 2: Relógio 24h -->
+      <button class="mobile-nav-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white" data-target="tab-clock">
+        <i data-lucide="compass" class="w-5 h-5"></i>
+        <span class="text-[10px] font-medium">Relógio 24h</span>
+      </button>
+
+      <!-- Tab 3: Lista / Cronograma -->
+      <button class="mobile-nav-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white" data-target="tab-schedule">
+        <i data-lucide="list-ordered" class="w-5 h-5"></i>
+        <span class="text-[10px] font-medium">Cronograma</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- ============================================================== -->
+  <!-- EDIT MODAL (CRUD Update) -->
+  <!-- ============================================================== -->
+  <div id="editModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-150">
+      
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+            <i data-lucide="edit-3" class="w-4 h-4"></i>
+          </div>
+          <h3 class="font-bold text-white text-base">Editar Atividade</h3>
+        </div>
+        <button id="closeEditModalBtn" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form id="editActivityForm" class="space-y-4">
+        <input type="hidden" id="editTaskId">
+
+        <div>
+          <label for="editTaskName" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            Nome da Atividade
+          </label>
+          <input type="text" id="editTaskName" required
+            class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="editStartTime" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+              <i data-lucide="play" class="w-3 h-3 text-emerald-400"></i> Início
+            </label>
+            <input type="time" id="editStartTime" required
+              class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
+          </div>
+
+          <div>
+            <label for="editEndTime" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+              <i data-lucide="square" class="w-3 h-3 text-rose-400"></i> Fim
+            </label>
+            <input type="time" id="editEndTime" required
+              class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all font-mono">
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex items-center justify-between">
+          <span class="text-xs text-slate-400">Nova duração:</span>
+          <span id="editDurationPreview" class="text-sm font-bold text-indigo-400 font-mono">--</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="editTaskCategory" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              Categoria
+            </label>
+            <select id="editTaskCategory" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
+              <option value="Trabalho">💼 Trabalho</option>
+              <option value="Estudo">📚 Estudo</option>
+              <option value="Saúde & Treino">🏋️ Saúde / Treino</option>
+              <option value="Descanso / Sono">😴 Descanso / Sono</option>
+              <option value="Lazer & Hobby">🎮 Lazer / Hobby</option>
+              <option value="Refeição">🍽️ Refeição</option>
+              <option value="Rotina Diária">🧼 Rotina / Casa</option>
+              <option value="Outros">✨ Outros</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              Cor
+            </label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="editTaskColor" value="#6366f1"
+                class="h-10 w-12 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer p-1">
+              <span id="editColorHexText" class="text-xs text-slate-400 font-mono">#6366F1</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+          <button type="button" id="cancelEditBtn" class="px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
+            Cancelar
+          </button>
+          <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/25 transition-all flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            Salvar Alterações
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-20 md:bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-slate-900 border border-emerald-500/40 text-emerald-300 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 text-sm font-medium">
+      <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+      <span id="toastMsg">Copiado com sucesso!</span>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script>
+    // Register PWA Service Worker for mobile install and push
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          console.log('Service Worker registrado:', reg.scope);
+        }).catch((err) => {
+          console.log('Falha no Service Worker:', err);
+        });
+      });
+    }
+
+    // Sound chime generator using Web Audio API (no external mp3 files needed)
+    function playNotificationChime() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.6);
+      } catch (e) {
+        console.log('Áudio não permitido ainda.');
+      }
+    }
+
+    const INITIAL_PRESET_ACTIVITIES = [
+      { id: '1', name: 'Dormir', startTime: '23:30', endTime: '06:30', minutes: 420, category: 'Descanso / Sono', color: '#3b82f6' },
+      { id: '2', name: 'Exercicio', startTime: '07:00', endTime: '08:00', minutes: 60, category: 'Outros', color: '#8b5cf6' },
+      { id: '3', name: 'Biblia', startTime: '08:10', endTime: '09:00', minutes: 50, category: 'Outros', color: '#8b5cf6' },
+      { id: '4', name: 'Arrumar para trabalhar', startTime: '10:30', endTime: '11:30', minutes: 60, category: 'Outros', color: '#64748b' },
+      { id: '5', name: 'Ida ao trabalho', startTime: '11:30', endTime: '12:00', minutes: 30, category: 'Estudo', color: '#ec4899' },
+      { id: '6', name: 'Trabalho', startTime: '12:00', endTime: '18:00', minutes: 360, category: 'Trabalho', color: '#6366f1' },
+      { id: '7', name: 'Descanso pós trabalho', startTime: '18:00', endTime: '20:00', minutes: 120, category: 'Descanso / Sono', color: '#3b82f6' },
+      { id: '8', name: 'Estudo', startTime: '20:00', endTime: '23:00', minutes: 180, category: 'Estudo', color: '#ec4899' }
+    ];
+
+    const PRIMARY_DB_KEY = 'timecraft_activities_permanent_db_v3';
+    let activities = [];
+    let hoveredActivity = null;
+    let lastNotifiedActivityId = null;
+
+    const categoryColors = {
+      'Trabalho': '#6366f1',
+      'Estudo': '#ec4899',
+      'Saúde & Treino': '#10b981',
+      'Descanso / Sono': '#3b82f6',
+      'Lazer & Hobby': '#8b5cf6',
+      'Refeição': '#f59e0b',
+      'Rotina Diária': '#06b6d4',
+      'Outros': '#8b5cf6'
+    };
+
+    const colorPalette = [
+      '#6366f1', '#3b82f6', '#ec4899', '#10b981', '#f59e0b', 
+      '#8b5cf6', '#06b6d4', '#14b8a6', '#f97316', '#ef4444'
+    ];
+
+    // DOM References
+    const clockCanvas = document.getElementById('clockCanvas');
+    const ctx = clockCanvas.getContext('2d');
+    const headerLiveClock = document.getElementById('headerLiveClock');
+    const clockNowText = document.getElementById('clockNowText');
+
+    // Hero elements
+    const heroActivityName = document.getElementById('heroActivityName');
+    const heroCategoryBadge = document.getElementById('heroCategoryBadge');
+    const heroStatusBadge = document.getElementById('heroStatusBadge');
+    const heroTimeRange = document.getElementById('heroTimeRange');
+    const heroTotalDuration = document.getElementById('heroTotalDuration');
+    const heroRemainingTime = document.getElementById('heroRemainingTime');
+    const heroProgressBar = document.getElementById('heroProgressBar');
+    const heroProgressPercent = document.getElementById('heroProgressPercent');
+    const heroStartHour = document.getElementById('heroStartHour');
+    const heroEndHour = document.getElementById('heroEndHour');
+    const heroCurrentTimeText = document.getElementById('heroCurrentTimeText');
+    const heroGlow = document.getElementById('heroGlow');
+
+    // Stats
+    const nextActivityName = document.getElementById('nextActivityName');
+    const nextActivityTime = document.getElementById('nextActivityTime');
+    const todayTotalAllocated = document.getElementById('todayTotalAllocated');
+    const todayFreeTime = document.getElementById('todayFreeTime');
+    const upcomingTimelineList = document.getElementById('upcomingTimelineList');
+    const tabCountBadge = document.getElementById('tabCountBadge');
+    const scheduleListCount = document.getElementById('scheduleListCount');
+    const taskListContainer = document.getElementById('taskListContainer');
+
+    // Clock Center Hub
+    const centerBadge = document.getElementById('centerBadge');
+    const centerMainTime = document.getElementById('centerMainTime');
+    const centerSubText = document.getElementById('centerSubText');
+    const centerDetailText = document.getElementById('centerDetailText');
+
+    // Notifications
+    const notificationBanner = document.getElementById('notificationBanner');
+    const enableNotificationsBtn = document.getElementById('enableNotificationsBtn');
+    const notificationToggleBtn = document.getElementById('notificationToggleBtn');
+    const notificationBtnText = document.getElementById('notificationBtnText');
+    const bellIcon = document.getElementById('bellIcon');
+
+    // Edit Modal Elements
+    const editModal = document.getElementById('editModal');
+    const editActivityForm = document.getElementById('editActivityForm');
+    const editTaskId = document.getElementById('editTaskId');
+    const editTaskName = document.getElementById('editTaskName');
+    const editStartTime = document.getElementById('editStartTime');
+    const editEndTime = document.getElementById('editEndTime');
+    const editDurationPreview = document.getElementById('editDurationPreview');
+    const editTaskCategory = document.getElementById('editTaskCategory');
+    const editTaskColor = document.getElementById('editTaskColor');
+    const editColorHexText = document.getElementById('editColorHexText');
+    const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+    // Create Form Elements
+    const createActivityForm = document.getElementById('createActivityForm');
+    const taskNameInput = document.getElementById('taskName');
+    const startTimeInput = document.getElementById('startTime');
+    const endTimeInput = document.getElementById('endTime');
+    const calculatedDurationPreview = document.getElementById('calculatedDurationPreview');
+    const taskCategorySelect = document.getElementById('taskCategory');
+    const taskColorInput = document.getElementById('taskColor');
+    const colorHexText = document.getElementById('colorHexText');
+
+    // Buttons
+    const printBtn = document.getElementById('printBtn');
+    const copySummaryBtn = document.getElementById('copySummaryBtn');
+    const exportBackupBtn = document.getElementById('exportBackupBtn');
+    const sortByScheduleBtn = document.getElementById('sortByScheduleBtn');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+
+    function showToast(msg) {
+      toastMsg.textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    // Time Math Functions
+    function timeStringToMinutes(timeStr) {
+      if (!timeStr) return 0;
+      const parts = timeStr.split(':');
+      const hours = parseInt(parts[0], 10) || 0;
+      const minutes = parseInt(parts[1], 10) || 0;
+      return (hours * 60) + minutes;
+    }
+
+    function calculateDurationMinutes(startTimeStr, endTimeStr) {
+      const startMin = timeStringToMinutes(startTimeStr);
+      const endMin = timeStringToMinutes(endTimeStr);
+      if (startMin === endMin) return 0;
+      if (endMin > startMin) return endMin - startMin;
+      return (1440 - startMin) + endMin;
+    }
+
+    function formatTime(totalMinutes) {
+      const hours = Math.floor(totalMinutes / 60);
+      const mins = Math.round(totalMinutes % 60);
+      if (hours === 0 && mins === 0) return '0m';
+      if (hours === 0) return `${mins}m`;
+      if (mins === 0) return `${hours}h`;
+      return `${hours}h ${mins.toString().padStart(2, '0')}m`;
+    }
+
+    function isCurrentTimeInSlot(nowMinutes, startMinutes, endMinutes) {
+      if (startMinutes === endMinutes) return false;
+      if (endMinutes > startMinutes) {
+        return nowMinutes >= startMinutes && nowMinutes < endMinutes;
+      } else {
+        return nowMinutes >= startMinutes || nowMinutes < endMinutes;
+      }
+    }
+
+    // Database Persistence
+    function loadDatabase() {
+      try {
+        let loaded = localStorage.getItem(PRIMARY_DB_KEY);
+        if (loaded) {
+          const parsed = JSON.parse(loaded);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            activities = parsed;
+          } else {
+            activities = [...INITIAL_PRESET_ACTIVITIES];
+          }
+        } else {
+          activities = [...INITIAL_PRESET_ACTIVITIES];
+        }
+        saveDatabase();
+      } catch (err) {
+        activities = [...INITIAL_PRESET_ACTIVITIES];
+        saveDatabase();
+      }
+    }
+
+    function saveDatabase() {
+      try {
+        localStorage.setItem(PRIMARY_DB_KEY, JSON.stringify(activities));
+      } catch (err) {
+        console.error('Erro ao salvar no banco local:', err);
+      }
+    }
+
+    // ==========================================
+    // NOTIFICATIONS ENGINE
+    // ==========================================
+    function checkNotificationStatus() {
+      if (!("Notification" in window)) {
+        notificationBanner.classList.add('hidden');
+        notificationToggleBtn.classList.add('hidden');
+        return;
+      }
+
+      if (Notification.permission === "granted") {
+        notificationBanner.classList.add('hidden');
+        notificationBtnText.textContent = "Notificações Ativas";
+        bellIcon.className = "w-3.5 h-3.5 text-emerald-400";
+        notificationToggleBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 transition-all";
+      } else if (Notification.permission === "denied") {
+        notificationBanner.classList.add('hidden');
+        notificationBtnText.textContent = "Bloqueadas";
+        bellIcon.className = "w-3.5 h-3.5 text-red-400";
+      } else {
+        notificationBanner.classList.remove('hidden');
+        notificationBtnText.textContent = "Ativar Alertas";
+      }
+    }
+
+    function requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        alert("Seu navegador não suporta notificações de sistema.");
+        return;
+      }
+      Notification.requestPermission().then((permission) => {
+        checkNotificationStatus();
+        if (permission === "granted") {
+          showToast("Notificações ativadas com sucesso!");
+          sendActivityNotification("TimeCraft", "Notificações ativadas! Avisaremos na mudança de cada atividade.");
+          playNotificationChime();
+        }
+      });
+    }
+
+    enableNotificationsBtn.addEventListener('click', requestNotificationPermission);
+    notificationToggleBtn.addEventListener('click', requestNotificationPermission);
+
+    function sendActivityNotification(title, body) {
+      if ("Notification" in window && Notification.permission === "granted") {
+        // Trigger Vibration on Mobile if supported
+        if ("vibrate" in navigator) {
+          navigator.vibrate([200, 100, 200]);
+        }
+        playNotificationChime();
+
+        // Native System Notification
+        new Notification(title, {
+          body: body,
+          icon: "https://cdn-icons-png.flaticon.com/512/3241/3241470.png",
+          badge: "https://cdn-icons-png.flaticon.com/512/3241/3241470.png",
+          tag: "timecraft-activity-alert",
+          renotify: true
+        });
+      }
+    }
+
+    // Navigation Tabs Engine
+    window.switchTab = function(targetId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(targetId).classList.remove('hidden');
+
+      // Update Desktop Tabs
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-target') === targetId) {
+          btn.className = "nav-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-md shadow-indigo-600/20";
+        } else {
+          btn.className = "nav-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white";
+        }
+      });
+
+      // Update Mobile Tabs
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        if (btn.getAttribute('data-target') === targetId) {
+          btn.className = "mobile-nav-btn flex flex-col items-center justify-center gap-1 text-indigo-400";
+          btn.querySelector('span').className = "text-[10px] font-bold";
+        } else {
+          btn.className = "mobile-nav-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white";
+          btn.querySelector('span').className = "text-[10px] font-medium";
+        }
+      });
+
+      if (targetId === 'tab-clock') {
+        drawClock();
+      }
+    };
+
+    document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.getAttribute('data-target')));
+    });
+
+    document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.getAttribute('data-target')));
+    });
+
+    // ==========================================
+    // HERO "NOW" UPDATE LOGIC
+    // ==========================================
+    function updateHeroNow() {
+      const now = new Date();
+      const currentMinutes = (now.getHours() * 60) + now.getMinutes() + (now.getSeconds() / 60);
+      const hStr = now.getHours().toString().padStart(2, '0');
+      const mStr = now.getMinutes().toString().padStart(2, '0');
+      const sStr = now.getSeconds().toString().padStart(2, '0');
+
+      headerLiveClock.textContent = `${hStr}:${mStr}:${sStr}`;
+      heroCurrentTimeText.textContent = `${hStr}:${mStr}`;
+      clockNowText.textContent = `${hStr}:${mStr}:${sStr}`;
+
+      // Find active slot
+      const currentSlot = activities.find(act => {
+        const s = timeStringToMinutes(act.startTime);
+        const e = timeStringToMinutes(act.endTime);
+        return isCurrentTimeInSlot(currentMinutes, s, e);
+      });
+
+      // Find sorted upcoming activities
+      const sorted = [...activities].sort((a, b) => timeStringToMinutes(a.startTime) - timeStringToMinutes(b.startTime));
+      
+      let nextSlot = sorted.find(act => timeStringToMinutes(act.startTime) > currentMinutes);
+      if (!nextSlot && sorted.length > 0) {
+        nextSlot = sorted[0]; // wraps to next day morning
+      }
+
+      if (currentSlot) {
+        // Check if activity changed -> Send Push Notification!
+        if (lastNotifiedActivityId !== currentSlot.id) {
+          if (lastNotifiedActivityId !== null) {
+            sendActivityNotification(
+              `⏰ Início: ${currentSlot.name}`,
+              `Está na hora de "${currentSlot.name}" (${currentSlot.startTime} às ${currentSlot.endTime}). Bom foco!`
+            );
+          }
+          lastNotifiedActivityId = currentSlot.id;
+        }
+
+        // Active State UI
+        heroStatusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+        heroStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> EM ANDAMENTO AGORA`;
+        
+        heroCategoryBadge.textContent = currentSlot.category;
+        heroCategoryBadge.style.color = currentSlot.color;
+        heroCategoryBadge.style.borderColor = `${currentSlot.color}40`;
+
+        heroActivityName.textContent = currentSlot.name;
+        heroTimeRange.textContent = `${currentSlot.startTime} às ${currentSlot.endTime}`;
+        heroTotalDuration.textContent = `${formatTime(currentSlot.minutes)} de duração`;
+
+        // Progress calculation
+        const sMin = timeStringToMinutes(currentSlot.startTime);
+        const eMin = timeStringToMinutes(currentSlot.endTime);
+        
+        let elapsed = 0;
+        let total = currentSlot.minutes;
+
+        if (eMin > sMin) {
+          elapsed = currentMinutes - sMin;
+        } else {
+          // Crosses midnight
+          if (currentMinutes >= sMin) elapsed = currentMinutes - sMin;
+          else elapsed = (1440 - sMin) + currentMinutes;
+        }
+
+        const remaining = Math.max(0, total - elapsed);
+        const percent = Math.min(100, Math.max(0, (elapsed / total) * 100));
+
+        heroRemainingTime.textContent = `${formatTime(Math.ceil(remaining))} restantes`;
+        heroProgressBar.style.width = `${percent.toFixed(1)}%`;
+        heroProgressBar.style.backgroundColor = currentSlot.color;
+        heroProgressPercent.textContent = `${percent.toFixed(0)}% concluído`;
+        heroStartHour.textContent = currentSlot.startTime;
+        heroEndHour.textContent = currentSlot.endTime;
+
+        heroGlow.style.backgroundColor = `${currentSlot.color}25`;
+
+      } else {
+        // Free Time Slot
+        if (lastNotifiedActivityId !== 'free') {
+          lastNotifiedActivityId = 'free';
+        }
+
+        heroStatusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30";
+        heroStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-indigo-400"></span> TEMPO LIVRE`;
+
+        heroCategoryBadge.textContent = "Não Planejado";
+        heroCategoryBadge.style.color = "#94a3b8";
+        heroCategoryBadge.style.borderColor = "#334155";
+
+        heroActivityName.textContent = "Tempo Livre";
+        heroTimeRange.textContent = "Nenhum bloco agendado agora";
+        heroTotalDuration.textContent = "Aproveite para descansar ou adiantar tarefas";
+
+        if (nextSlot) {
+          const nextStart = timeStringToMinutes(nextSlot.startTime);
+          let diff = nextStart > currentMinutes ? nextStart - currentMinutes : (1440 - currentMinutes) + nextStart;
+          heroRemainingTime.textContent = `${formatTime(Math.ceil(diff))} até a próxima`;
+          heroProgressPercent.textContent = `Próximo: ${nextSlot.name}`;
+          heroStartHour.textContent = `${hStr}:${mStr}`;
+          heroEndHour.textContent = nextSlot.startTime;
+        } else {
+          heroRemainingTime.textContent = "Livre o dia todo";
+          heroProgressPercent.textContent = "100% livre";
+        }
+
+        heroProgressBar.style.width = "100%";
+        heroProgressBar.style.backgroundColor = "#3b82f6";
+      }
+
+      // Next Activity Card
+      if (nextSlot) {
+        nextActivityName.textContent = nextSlot.name;
+        nextActivityTime.textContent = `Inicia às ${nextSlot.startTime} (duração ${formatTime(nextSlot.minutes)})`;
+      } else {
+        nextActivityName.textContent = "Nenhuma";
+        nextActivityTime.textContent = "Sem próximas atividades";
+      }
+
+      // Daily Total
+      const totalMinutes = activities.reduce((sum, item) => sum + item.minutes, 0);
+      const freeMins = Math.max(0, 1440 - totalMinutes);
+      todayTotalAllocated.textContent = `${formatTime(totalMinutes)} planejadas`;
+      todayFreeTime.textContent = `${formatTime(freeMins)} de tempo livre`;
+    }
+
+    // Render Timeline on Tab 1
+    function renderUpcomingTimeline() {
+      const now = new Date();
+      const currentMinutes = (now.getHours() * 60) + now.getMinutes();
+      const sorted = [...activities].sort((a, b) => timeStringToMinutes(a.startTime) - timeStringToMinutes(b.startTime));
+
+      upcomingTimelineList.innerHTML = sorted.map((act) => {
+        const sMin = timeStringToMinutes(act.startTime);
+        const eMin = timeStringToMinutes(act.endTime);
+        const isNow = isCurrentTimeInSlot(currentMinutes, sMin, eMin);
+        const isPast = eMin > sMin ? eMin <= currentMinutes : false;
+
+        return `
+          <div class="flex items-center justify-between p-3 rounded-2xl border ${isNow ? 'bg-indigo-600/10 border-indigo-500/40' : (isPast ? 'bg-slate-950/40 border-slate-800/40 opacity-60' : 'bg-slate-950/80 border-slate-800/80')} transition-all">
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${act.color}"></span>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <h4 class="text-sm font-bold text-white truncate">${act.name}</h4>
+                  <span class="px-2 py-0.5 rounded text-[9px] font-medium bg-slate-800 text-slate-300">${act.category}</span>
+                  ${isNow ? '<span class="px-2 py-0.2 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-400">AGORA</span>' : ''}
+                </div>
+                <p class="text-xs text-slate-400 font-mono mt-0.5">${act.startTime} às ${act.endTime} (${formatTime(act.minutes)})</p>
+              </div>
+            </div>
+            <button onclick="openEditModal('${act.id}')" class="p-2 text-slate-400 hover:text-white rounded-lg transition-colors" title="Editar">
+              <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==========================================
+    // 24H CANVAS CLOCK ENGINE
+    // ==========================================
+    function drawClock() {
+      const width = clockCanvas.width;
+      const height = clockCanvas.height;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const outerRadius = (width / 2) - 40;
+      const dialRadius = outerRadius - 40;
+      const innerRadius = dialRadius - 90;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Outer Dial
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, dialRadius, 0, Math.PI * 2);
+      ctx.fillStyle = '#090d16';
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#1e293b';
+      ctx.stroke();
+
+      // Hour Marks (0h to 23h)
+      for (let h = 0; h < 24; h++) {
+        const angle = (h / 24) * (Math.PI * 2) - (Math.PI / 2);
+        const tickInner = dialRadius + 4;
+        const isMajor = h % 3 === 0;
+        const tickOuter = isMajor ? dialRadius + 18 : dialRadius + 10;
+
+        const x1 = centerX + Math.cos(angle) * tickInner;
+        const y1 = centerY + Math.sin(angle) * tickInner;
+        const x2 = centerX + Math.cos(angle) * tickOuter;
+        const y2 = centerY + Math.sin(angle) * tickOuter;
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = isMajor ? '#6366f1' : '#334155';
+        ctx.lineWidth = isMajor ? 3 : 1.5;
+        ctx.stroke();
+
+        const labelRadius = dialRadius + 28;
+        const tx = centerX + Math.cos(angle) * labelRadius;
+        const ty = centerY + Math.sin(angle) * labelRadius;
+
+        ctx.font = isMajor ? 'bold 18px "JetBrains Mono"' : '500 13px "JetBrains Mono"';
+        ctx.fillStyle = isMajor ? '#f8fafc' : '#64748b';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        ctx.fillText(h.toString().padStart(2, '0') + 'h', tx, ty);
+      }
+
+      // Base Ring
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, dialRadius, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, innerRadius, Math.PI * 2, 0, true);
+      ctx.fillStyle = '#0f172a';
+      ctx.fill();
+
+      function drawActivityArc(startMin, endMin, color, isHovered) {
+        const startAngle = (startMin / 1440) * (Math.PI * 2) - (Math.PI / 2);
+        const endAngle = (endMin / 1440) * (Math.PI * 2) - (Math.PI / 2);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, isHovered ? dialRadius + 5 : dialRadius, startAngle, endAngle, false);
+        ctx.arc(centerX, centerY, isHovered ? innerRadius - 5 : innerRadius, endAngle, startAngle, true);
+        ctx.closePath();
+
+        ctx.fillStyle = color;
+        ctx.globalAlpha = isHovered ? 0.95 : 0.82;
+        ctx.fill();
+
+        ctx.lineWidth = isHovered ? 3 : 2;
+        ctx.strokeStyle = isHovered ? '#ffffff' : '#0f172a';
+        ctx.globalAlpha = 1.0;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      activities.forEach(act => {
+        const startMin = timeStringToMinutes(act.startTime);
+        const endMin = timeStringToMinutes(act.endTime);
+        const isHovered = hoveredActivity && hoveredActivity.id === act.id;
+
+        if (endMin > startMin) {
+          drawActivityArc(startMin, endMin, act.color, isHovered);
+        } else {
+          drawActivityArc(startMin, 1440, act.color, isHovered);
+          drawActivityArc(0, endMin, act.color, isHovered);
+        }
+      });
+
+      // Inner Center Hub
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, innerRadius, 0, Math.PI * 2);
+      ctx.fillStyle = '#020617';
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#1e293b';
+      ctx.stroke();
+
+      // Real-Time Hand
+      const now = new Date();
+      const currentMinutes = (now.getHours() * 60) + now.getMinutes() + (now.getSeconds() / 60);
+      const currentAngle = (currentMinutes / 1440) * (Math.PI * 2) - (Math.PI / 2);
+
+      const handOuterX = centerX + Math.cos(currentAngle) * (dialRadius + 8);
+      const handOuterY = centerY + Math.sin(currentAngle) * (dialRadius + 8);
+      const handInnerX = centerX + Math.cos(currentAngle) * (innerRadius - 4);
+      const handInnerY = centerY + Math.sin(currentAngle) * (innerRadius - 4);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(handInnerX, handInnerY);
+      ctx.lineTo(handOuterX, handOuterY);
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      ctx.shadowColor = '#10b981';
+      ctx.shadowBlur = 12;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(handOuterX, handOuterY, 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#34d399';
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#ffffff';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Canvas Mouse Interaction
+    clockCanvas.addEventListener('mousemove', (e) => {
+      const rect = clockCanvas.getBoundingClientRect();
+      const scaleX = clockCanvas.width / rect.width;
+      const scaleY = clockCanvas.height / rect.height;
+
+      const clickX = (e.clientX - rect.left) * scaleX;
+      const clickY = (e.clientY - rect.top) * scaleY;
+
+      const centerX = clockCanvas.width / 2;
+      const centerY = clockCanvas.height / 2;
+      const dx = clickX - centerX;
+      const dy = clickY - centerY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      const dialRadius = (clockCanvas.width / 2) - 80;
+      const innerRadius = dialRadius - 90;
+
+      if (distance >= innerRadius && distance <= dialRadius + 10) {
+        let angle = Math.atan2(dy, dx) + (Math.PI / 2);
+        if (angle < 0) angle += Math.PI * 2;
+        
+        const mouseMinute = (angle / (Math.PI * 2)) * 1440;
+        
+        const found = activities.find(act => {
+          const s = timeStringToMinutes(act.startTime);
+          const e = timeStringToMinutes(act.endTime);
+          return isCurrentTimeInSlot(mouseMinute, s, e);
+        });
+
+        if (found) {
+          hoveredActivity = found;
+          centerBadge.textContent = found.category;
+          centerBadge.className = 'text-[9px] font-bold uppercase tracking-wider text-white px-2 py-0.5 rounded-full mb-1';
+          centerBadge.style.backgroundColor = found.color;
+          centerMainTime.textContent = `${found.startTime} - ${found.endTime}`;
+          centerSubText.textContent = found.name;
+          centerDetailText.textContent = `${formatTime(found.minutes)} (${((found.minutes/1440)*100).toFixed(1)}%)`;
+        } else {
+          hoveredActivity = null;
+          resetClockCenter();
+        }
+      } else {
+        hoveredActivity = null;
+        resetClockCenter();
+      }
+      drawClock();
+    });
+
+    clockCanvas.addEventListener('mouseleave', () => {
+      hoveredActivity = null;
+      resetClockCenter();
+      drawClock();
+    });
+
+    function resetClockCenter() {
+      const now = new Date();
+      const hStr = now.getHours().toString().padStart(2, '0');
+      const mStr = now.getMinutes().toString().padStart(2, '0');
+      const nowMins = (now.getHours() * 60) + now.getMinutes();
+
+      centerBadge.textContent = 'HORA ATUAL';
+      centerBadge.className = 'text-[9px] font-bold uppercase tracking-wider text-indigo-400 px-2 py-0.5 rounded-full bg-indigo-500/10 mb-1';
+      centerBadge.style.backgroundColor = '';
+      centerMainTime.textContent = `${hStr}:${mStr}`;
+      
+      const currentSlot = activities.find(act => {
+        const s = timeStringToMinutes(act.startTime);
+        const e = timeStringToMinutes(act.endTime);
+        return isCurrentTimeInSlot(nowMins, s, e);
+      });
+
+      if (currentSlot) {
+        centerSubText.textContent = currentSlot.name;
+        centerDetailText.textContent = `Até às ${currentSlot.endTime}`;
+      } else {
+        centerSubText.textContent = 'Tempo Livre';
+        centerDetailText.textContent = 'Sem bloco ativo agora';
+      }
+    }
+
+    // CRUD & UI Update
+    function updateUI() {
+      tabCountBadge.textContent = activities.length;
+      scheduleListCount.textContent = activities.length;
+
+      // Render Schedule Tab List
+      taskListContainer.innerHTML = activities.map((act, idx) => {
+        const dayPercent = ((act.minutes / 1440) * 100).toFixed(1);
+
+        return `
+          <div class="group bg-slate-950/80 hover:bg-slate-950 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-4 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3.5 min-w-0">
+              <span class="w-4 h-4 rounded-full flex-shrink-0 shadow-md ring-2 ring-slate-800" style="background-color: ${act.color}"></span>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-mono text-xs text-slate-500 font-bold">#${idx + 1}</span>
+                  <h4 class="text-sm font-bold text-white truncate">${act.name}</h4>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700/50">
+                    ${act.category}
+                  </span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 text-xs text-slate-400 mt-1">
+                  <span class="inline-flex items-center gap-1 font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20">
+                    ${act.startTime} às ${act.endTime}
+                  </span>
+                  <span class="font-bold text-slate-200">${formatTime(act.minutes)}</span>
+                  <span class="text-slate-600">•</span>
+                  <span class="text-indigo-400 font-mono">${dayPercent}% do dia</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 self-end sm:self-center no-print">
+              <button onclick="openEditModal('${act.id}')" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-indigo-600/20 text-slate-300 border border-slate-700/60 text-xs font-semibold flex items-center gap-1 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                <span>Editar</span>
+              </button>
+              <button onclick="deleteActivity('${act.id}')" class="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      updateHeroNow();
+      renderUpcomingTimeline();
+      drawClock();
+      lucide.createIcons();
+    }
+
+    // CRUD: CREATE
+    createActivityForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = taskNameInput.value.trim();
+      const start = startTimeInput.value;
+      const end = endTimeInput.value;
+      const durationMins = calculateDurationMinutes(start, end);
+
+      if (!name) return;
+      if (durationMins <= 0) {
+        alert('O horário inicial e final precisam ser diferentes.');
+        return;
+      }
+
+      const newActivity = {
+        id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
+        name: name,
+        startTime: start,
+        endTime: end,
+        minutes: durationMins,
+        category: taskCategorySelect.value,
+        color: taskColorInput.value
+      };
+
+      activities.push(newActivity);
+      saveDatabase();
+
+      taskNameInput.value = '';
+      startTimeInput.value = end;
+      
+      const nextEndMinutes = (timeStringToMinutes(end) + 60) % 1440;
+      const nextEndH = Math.floor(nextEndMinutes / 60).toString().padStart(2, '0');
+      const nextEndM = (nextEndMinutes % 60).toString().padStart(2, '0');
+      endTimeInput.value = `${nextEndH}:${nextEndM}`;
+
+      updateUI();
+      showToast(`"${name}" cadastrado com sucesso!`);
+    });
+
+    // CRUD: EDIT
+    window.openEditModal = function(id) {
+      const act = activities.find(a => a.id === id);
+      if (!act) return;
+
+      editTaskId.value = act.id;
+      editTaskName.value = act.name;
+      editStartTime.value = act.startTime;
+      editEndTime.value = act.endTime;
+      editTaskCategory.value = act.category;
+      editTaskColor.value = act.color;
+      editColorHexText.textContent = act.color.toUpperCase();
+      editDurationPreview.textContent = formatTime(act.minutes);
+
+      editModal.classList.remove('hidden');
+      lucide.createIcons();
+    };
+
+    function closeEditModal() {
+      editModal.classList.add('hidden');
+    }
+
+    closeEditModalBtn.addEventListener('click', closeEditModal);
+    cancelEditBtn.addEventListener('click', closeEditModal);
+
+    editActivityForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = editTaskId.value;
+      const act = activities.find(a => a.id === id);
+      if (!act) return;
+
+      const name = editTaskName.value.trim();
+      const start = editStartTime.value;
+      const end = editEndTime.value;
+      const durationMins = calculateDurationMinutes(start, end);
+
+      if (!name || durationMins <= 0) return;
+
+      act.name = name;
+      act.startTime = start;
+      act.endTime = end;
+      act.minutes = durationMins;
+      act.category = editTaskCategory.value;
+      act.color = editTaskColor.value;
+
+      saveDatabase();
+      closeEditModal();
+      updateUI();
+      showToast(`"${name}" atualizado!`);
+    });
+
+    // CRUD: DELETE
+    window.deleteActivity = function(id) {
+      const act = activities.find(a => a.id === id);
+      if (confirm(`Deseja excluir "${act?.name}"?`)) {
+        activities = activities.filter(a => a.id !== id);
+        saveDatabase();
+        updateUI();
+        showToast('Atividade excluída.');
+      }
+    };
+
+    // Sort Chronologically
+    sortByScheduleBtn.addEventListener('click', () => {
+      activities.sort((a, b) => timeStringToMinutes(a.startTime) - timeStringToMinutes(b.startTime));
+      saveDatabase();
+      updateUI();
+      showToast('Cronograma ordenado por horário!');
+    });
+
+    // Backup & Sharing
+    exportBackupBtn.addEventListener('click', () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(activities, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `timecraft_rotina_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('Backup JSON baixado!');
+    });
+
+    copySummaryBtn.addEventListener('click', () => {
+      const sorted = [...activities].sort((a, b) => timeStringToMinutes(a.startTime) - timeStringToMinutes(b.startTime));
+      let text = `📅 *CRONOGRAMA DO MEU DIA (24H)*\n\n`;
+      sorted.forEach((act) => {
+        text += `⏰ *${act.startTime} às ${act.endTime}* | ${act.name} (${formatTime(act.minutes)})\n`;
+      });
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Cronograma copiado para compartilhar!');
+      });
+    });
+
+    printBtn.addEventListener('click', () => {
+      activities.sort((a, b) => timeStringToMinutes(a.startTime) - timeStringToMinutes(b.startTime));
+      updateUI();
+      window.print();
+    });
+
+    themeToggleBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+    });
+
+    // Tick Interval
+    function tick() {
+      updateHeroNow();
+      drawClock();
+    }
+
+    // Startup
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDatabase();
+      checkNotificationStatus();
+      updateUI();
+      setInterval(tick, 1000);
+      tick();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

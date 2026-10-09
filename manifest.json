@@ -1,0 +1,21 @@
+{
+  "name": "TimeCraft - Organizador Diário",
+  "short_name": "TimeCraft",
+  "description": "Seu organizador de tempo diário em 24 horas com notificações e modo foco",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3241/3241470.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3241/3241470.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
